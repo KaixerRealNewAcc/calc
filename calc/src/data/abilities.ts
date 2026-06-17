@@ -327,7 +327,28 @@ const SV = SS.concat([
   'Zero to Hero',
 ]);
 
-export const ABILITIES = [[], RBY, GSC, ADV, DPP, BW, XY, SM, SS, SV];
+const RR = SV.concat([
+  'Bad Company',
+  'Blazing Soul',
+  'Blubber Defense',
+  'Bone Zone',
+  'Bull Rush',
+  'Cash Splash',
+  'Fatal Precision',
+  'Feline Prowess',
+  'Mountaineer',
+  'ORAORAORAORA',
+  'Parasitic Waste',
+  'Phoenix Down',
+  'Primal Armor',
+  'Quill Rush',
+  'Sage Power',
+  'Self Sufficient',
+  'Striker',
+  'Surprise!',
+]);
+
+export const ABILITIES = [[], RBY, GSC, ADV, DPP, BW, XY, SM, SS, SV, RR];
 
 export class Abilities implements I.Abilities {
   private readonly gen: I.GenerationNum;

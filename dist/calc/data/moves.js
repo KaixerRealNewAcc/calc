@@ -4735,6 +4735,52 @@ var SV_PATCH = {
         secondaries: true,
         isWind: true,
         target: 'allAdjacentFoes'
+    },
+    'Aqua Fang': {
+        bp: 80,
+        type: 'Water',
+        category: 'Physical',
+        makesContact: true,
+        isBite: true,
+        zp: 160,
+        maxPower: 140
+    },
+    'Dark Hole': {
+        bp: 100,
+        type: 'Dark',
+        category: 'Special',
+        secondaries: true,
+        zp: 180,
+        maxPower: 130
+    },
+    'Forbidden Spell': {
+        bp: 0,
+        type: 'Psychic',
+        category: 'Status'
+    },
+    'Draco Barrage': {
+        bp: 100,
+        type: 'Dragon',
+        category: 'Special',
+        recoil: [33, 100],
+        zp: 180,
+        maxPower: 130
+    },
+    'Sonic Slash': {
+        bp: 0,
+        type: 'Flying',
+        category: 'Physical',
+        isSlicing: true,
+        isWind: true,
+        zp: 160,
+        maxPower: 140
+    },
+    'Soul Robbery': {
+        bp: 100,
+        type: 'Psychic',
+        category: 'Special',
+        zp: 180,
+        maxPower: 130
     }
 };
 var SV = (0, util_1.extend)(true, {}, SS, SV_PATCH);
