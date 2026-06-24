@@ -1,6 +1,6 @@
-import * as I from '../data/interface';
-import { Pokemon, Move, Result } from '../index';
-import { State } from '../state';
+import type * as I from '../data/interface';
+import { type Result, Pokemon, Move } from '../index';
+import type { State } from '../state';
 import { Field, Side } from '../field';
 declare const calc: (gen: I.GenerationNum) => (attacker: Pokemon, defender: Pokemon, move: Move, field?: Field) => Result;
 declare const move: (gen: I.GenerationNum) => (name: string, options?: Partial<Omit<State.Move, 'ability' | 'item' | 'species'>> & {
@@ -35,7 +35,7 @@ interface Gen {
     Side: typeof side;
 }
 export declare function inGen(gen: I.GenerationNum, fn: (gen: Gen) => void): void;
-export declare function inGens(from: I.GenerationNum, to: I.GenerationNum, fn: (gen: Gen) => void): void;
+export declare function inGens(gens: [I.GenerationNum, I.GenerationNum] | (I.GenerationNum | [I.GenerationNum, I.GenerationNum])[], fn: (gen: Gen) => void): void;
 export declare function tests(name: string, fn: (gen: Gen) => void, type?: 'skip' | 'only'): void;
 export declare function tests(name: string, from: I.GenerationNum, fn: (gen: Gen) => void, type?: 'skip' | 'only'): void;
 export declare function tests(name: string, from: I.GenerationNum, to: I.GenerationNum, fn: (gen: Gen) => void, type?: 'skip' | 'only'): void;

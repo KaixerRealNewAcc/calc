@@ -58,9 +58,33 @@ function inGen(gen, fn) {
     });
 }
 exports.inGen = inGen;
-function inGens(from, to, fn) {
-    for (var gen = from; gen <= to; gen++) {
-        inGen(gen, fn);
+function inGens(gens, fn) {
+    var e_1, _a;
+    if (typeof gens[0] === 'number' && typeof gens[1] === 'number') {
+        for (var gen = gens[0]; gen <= gens[1]; gen++) {
+            inGen(gen, fn);
+        }
+        return;
+    }
+    try {
+        for (var gens_1 = __values(gens), gens_1_1 = gens_1.next(); !gens_1_1.done; gens_1_1 = gens_1.next()) {
+            var target = gens_1_1.value;
+            if (Array.isArray(target)) {
+                for (var gen = target[0]; gen <= target[1]; gen++) {
+                    inGen(gen, fn);
+                }
+            }
+            else {
+                inGen(target, fn);
+            }
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (gens_1_1 && !gens_1_1.done && (_a = gens_1["return"])) _a.call(gens_1);
+        }
+        finally { if (e_1) throw e_1.error; }
     }
 }
 exports.inGens = inGens;
@@ -77,13 +101,13 @@ function tests() {
     var type = undefined;
     if (typeof args[1] !== 'number') {
         from = 1;
-        to = 8;
+        to = 9;
         fn = args[1];
         type = args[2];
     }
     else if (typeof args[2] !== 'number') {
         from = (_a = args[1]) !== null && _a !== void 0 ? _a : 1;
-        to = 8;
+        to = 9;
         fn = args[2];
         type = args[3];
     }
@@ -93,7 +117,7 @@ function tests() {
         fn = args[3];
         type = args[4];
     }
-    inGens(from, to, function (gen) {
+    inGens([from, to], function (gen) {
         var n = "".concat(name, " (gen ").concat(gen.gen, ")");
         if (type === 'skip') {
             test.skip(n, function () { return fn(gen); });
@@ -109,7 +133,7 @@ function tests() {
 exports.tests = tests;
 expect.extend({
     toMatch: function (received, gen, notation, diff) {
-        var e_1, _a;
+        var e_2, _a;
         if (typeof notation !== 'string') {
             diff = notation;
             notation = '%';
@@ -131,12 +155,12 @@ expect.extend({
                     expected.result = result;
             }
         }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
         finally {
             try {
                 if (breakdowns_1_1 && !breakdowns_1_1.done && (_a = breakdowns_1["return"])) _a.call(breakdowns_1);
             }
-            finally { if (e_1) throw e_1.error; }
+            finally { if (e_2) throw e_2.error; }
         }
         if (!(expected.range || expected.desc || expected.result)) {
             throw new Error("toMatch called with empty diff: ".concat(diff));

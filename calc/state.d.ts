@@ -1,4 +1,4 @@
-import * as I from './data/interface';
+import type * as I from './data/interface';
 export declare namespace State {
     interface Pokemon {
         name: I.SpeciesName;
@@ -6,8 +6,9 @@ export declare namespace State {
         ability?: I.AbilityName;
         abilityOn?: boolean;
         isDynamaxed?: boolean;
-        isSaltCure?: boolean;
+        dynamaxLevel?: number;
         alliesFainted?: number;
+        boostedStat?: I.StatIDExceptHP | 'auto';
         item?: I.ItemName;
         gender?: I.GenderName;
         nature?: I.NatureName;
@@ -26,6 +27,7 @@ export declare namespace State {
         useZ?: boolean;
         useMax?: boolean;
         isCrit?: boolean;
+        isStellarFirstUse?: boolean;
         hits?: number;
         timesUsed?: number;
         timesUsedWithMetronome?: number;
@@ -37,6 +39,7 @@ export declare namespace State {
         terrain?: I.Terrain;
         isMagicRoom?: boolean;
         isWonderRoom?: boolean;
+        isTrickRoom?: boolean;
         isGravity?: boolean;
         isAuraBreak?: boolean;
         isFairyAura?: boolean;
@@ -58,16 +61,23 @@ export declare namespace State {
         isSR?: boolean;
         isReflect?: boolean;
         isLightScreen?: boolean;
+        isSolidRock?: boolean;
+        isMagnetRise?: boolean;
         isProtected?: boolean;
         isSeeded?: boolean;
+        isSaltCured?: boolean;
         isForesight?: boolean;
         isTailwind?: boolean;
+        isSwamp?: boolean;
+        isTrickRoom?: boolean;
         isHelpingHand?: boolean;
         isFlowerGift?: boolean;
+        isPowerTrick?: boolean;
         isFriendGuard?: boolean;
         isAuroraVeil?: boolean;
         isBattery?: boolean;
         isPowerSpot?: boolean;
+        isSteelySpirit?: boolean;
         isSwitching?: 'out' | 'in';
     }
 }

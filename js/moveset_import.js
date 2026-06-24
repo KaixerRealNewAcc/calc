@@ -6,8 +6,6 @@ function placeBsBtn() {
 		var pokes = document.getElementsByClassName("import-team-text")[0].value;
 		var name = document.getElementsByClassName("import-name-text")[0].value.trim() === "" ? "Custom Set" : document.getElementsByClassName("import-name-text")[0].value;
 		addSets(pokes, name);
-		//erase the import text area
-		document.getElementsByClassName("import-team-text")[0].value="";
 	});
 }
 
@@ -18,7 +16,6 @@ function ExportPokemon(pokeInfo) {
 	finalText = pokemon.name + (pokemon.item ? " @ " + pokemon.item : "") + "\n";
 	finalText += "Level: " + pokemon.level + "\n";
 	finalText += pokemon.nature && gen > 2 ? pokemon.nature + " Nature" + "\n" : "";
-	finalText += pokemon.teraType && gen > 8 ? "Tera Type: " + pokemon.teraType : "";
 	finalText += pokemon.ability ? "Ability: " + pokemon.ability + "\n" : "";
 	if (gen > 2) {
 		var EVs_Array = [];
@@ -56,7 +53,7 @@ function ExportPokemon(pokeInfo) {
 			finalText += "- " + moveName + "\n";
 		}
 	}
-	finalText = finalText.trim();
+	finalText = normalizeExportText(finalText.trim());
 	$("textarea.import-team-text").val(finalText);
 }
 
@@ -78,6 +75,27 @@ function serialize(array, separator) {
 		}
 	}
 	return text;
+}
+
+function normalizeUnicodeText(text, form) {
+	if (text === undefined || text === null) return '';
+	text = '' + text;
+	return typeof text.normalize === 'function' ? text.normalize(form) : text;
+}
+
+function normalizeCalcText(text) {
+	return normalizeUnicodeText(text, 'NFD');
+}
+
+function normalizeExportText(text) {
+	return normalizeUnicodeText(text, 'NFC');
+}
+
+function getSpeciesKey(speciesName) {
+	var normalizedName = normalizeCalcText(speciesName.trim());
+	if (calc.SPECIES[9][normalizedName] !== undefined) return normalizedName;
+	if (calc.SPECIES[9][speciesName.trim()] !== undefined) return speciesName.trim();
+	return normalizedName;
 }
 
 function getAbility(row) {
@@ -155,7 +173,7 @@ function getStats(currentPoke, rows, offset) {
 		}
 
 		currentNature = rows[x] ? rows[x].trim().split(" ") : '';
-		if (currentNature[1] == "Nature" && currentNature[2] != "Power") {
+		if (currentNature[1] == "Nature") {
 			currentPoke.nature = currentNature[0];
 		}
 	}
@@ -193,27 +211,8 @@ function getMoves(currentPoke, rows, offset) {
 
 function addToDex(poke) {
 	var dexObject = {};
-	if ($("#randoms").prop("checked")) {
-		if (GEN9RANDOMBATTLE[poke.name] == undefined) GEN9RANDOMBATTLE[poke.name] = {};
-		if (GEN8RANDOMBATTLE[poke.name] == undefined) GEN8RANDOMBATTLE[poke.name] = {};
-		if (GEN7RANDOMBATTLE[poke.name] == undefined) GEN7RANDOMBATTLE[poke.name] = {};
-		if (GEN6RANDOMBATTLE[poke.name] == undefined) GEN6RANDOMBATTLE[poke.name] = {};
-		if (GEN5RANDOMBATTLE[poke.name] == undefined) GEN5RANDOMBATTLE[poke.name] = {};
-		if (GEN4RANDOMBATTLE[poke.name] == undefined) GEN4RANDOMBATTLE[poke.name] = {};
-		if (GEN3RANDOMBATTLE[poke.name] == undefined) GEN3RANDOMBATTLE[poke.name] = {};
-		if (GEN2RANDOMBATTLE[poke.name] == undefined) GEN2RANDOMBATTLE[poke.name] = {};
-		if (GEN1RANDOMBATTLE[poke.name] == undefined) GEN1RANDOMBATTLE[poke.name] = {};
-	} else {
-		if (SETDEX_SV[poke.name] == undefined) SETDEX_SV[poke.name] = {};
-		if (SETDEX_SS[poke.name] == undefined) SETDEX_SS[poke.name] = {};
-		if (SETDEX_SM[poke.name] == undefined) SETDEX_SM[poke.name] = {};
-		if (SETDEX_XY[poke.name] == undefined) SETDEX_XY[poke.name] = {};
-		if (SETDEX_BW[poke.name] == undefined) SETDEX_BW[poke.name] = {};
-		if (SETDEX_DPP[poke.name] == undefined) SETDEX_DPP[poke.name] = {};
-		if (SETDEX_ADV[poke.name] == undefined) SETDEX_ADV[poke.name] = {};
-		if (SETDEX_GSC[poke.name] == undefined) SETDEX_GSC[poke.name] = {};
-		if (SETDEX_RBY[poke.name] == undefined) SETDEX_RBY[poke.name] = {};
-	}
+	if (SETDEX_SV[poke.name] == undefined) SETDEX_SV[poke.name] = {};
+
 	if (poke.ability !== undefined) {
 		dexObject.ability = poke.ability;
 	}
@@ -247,26 +246,17 @@ function addToDex(poke) {
 }
 
 function updateDex(customsets) {
+	var normalizedCustomsets = {};
 	for (var pokemon in customsets) {
+		var pokemonName = getSpeciesKey(pokemon);
+		if (!normalizedCustomsets[pokemonName]) normalizedCustomsets[pokemonName] = {};
 		for (var moveset in customsets[pokemon]) {
-			if (!SETDEX_SV[pokemon]) SETDEX_SV[pokemon] = {};
-			SETDEX_SV[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_SS[pokemon]) SETDEX_SS[pokemon] = {};
-			SETDEX_SS[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_SM[pokemon]) SETDEX_SM[pokemon] = {};
-			SETDEX_SM[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_XY[pokemon]) SETDEX_XY[pokemon] = {};
-			SETDEX_XY[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_BW[pokemon]) SETDEX_BW[pokemon] = {};
-			SETDEX_BW[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_DPP[pokemon]) SETDEX_DPP[pokemon] = {};
-			SETDEX_DPP[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_ADV[pokemon]) SETDEX_ADV[pokemon] = {};
-			SETDEX_ADV[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_GSC[pokemon]) SETDEX_GSC[pokemon] = {};
-			SETDEX_GSC[pokemon][moveset] = customsets[pokemon][moveset];
-			if (!SETDEX_RBY[pokemon]) SETDEX_RBY[pokemon] = {};
-			SETDEX_RBY[pokemon][moveset] = customsets[pokemon][moveset];
+			var setName = normalizeCalcText(moveset);
+
+			normalizedCustomsets[pokemonName][setName] = customsets[pokemon][moveset];
+			if (!SETDEX_SV[pokemonName]) SETDEX_SV[pokemonName] = {};
+			SETDEX_SV[pokemonName][setName] = customsets[pokemon][moveset];
+
 			var poke = {name: pokemon, nameProp: moveset};	
 			addBoxed(poke);
 		}
@@ -336,6 +326,7 @@ function checkExeptions(poke) {
 	case 'Pikachu-PhD':
 	case 'Pikachu-Pop-Star':
 	case 'Pikachu-Rock-Star':
+	case 'Pikachu-Flying':
 		poke = "Pikachu";
 		break;
 	case 'Vivillon-Fancy':
@@ -347,6 +338,14 @@ function checkExeptions(poke) {
 	case 'Florges-Orange':
 	case 'Florges-Yellow':
 		poke = "Florges";
+		break;
+	case 'Shellos-East':
+		poke = "Shellos";
+		break;
+	case 'Deerling-Summer':
+	case 'Deerling-Autumn':
+	case 'Deerling-Winter':
+		poke = "Deerling";
 		break;
 	}
 	return poke;
@@ -364,7 +363,6 @@ $("#clearSets").click(function () {
 	for (let zone of document.getElementsByClassName("dropzone")){
 		zone.innerHTML="";
 	}
-
 });
 
 $(allPokemon("#importedSets")).click(function () {
@@ -388,6 +386,4 @@ $(document).ready(function () {
 	} else {
 		loadDefaultLists();
 	}
-	//adjust the side buttons that collapse the data wished to be hidden
-	setupSideCollapsers();
 });

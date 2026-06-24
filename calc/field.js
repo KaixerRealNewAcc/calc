@@ -25,6 +25,7 @@ var Field = (function () {
         this.weather = field.weather;
         this.isMagicRoom = !!field.isMagicRoom;
         this.isWonderRoom = !!field.isWonderRoom;
+        this.isTrickRoom = !!field.isTrickRoom;
         this.isGravity = !!field.isGravity;
         this.isAuraBreak = field.isAuraBreak || false;
         this.isFairyAura = field.isFairyAura || false;
@@ -62,6 +63,7 @@ var Field = (function () {
             terrain: this.terrain,
             isMagicRoom: this.isMagicRoom,
             isWonderRoom: this.isWonderRoom,
+            isTrickRoom: this.isTrickRoom,
             isGravity: this.isGravity,
             attackerSide: this.attackerSide,
             defenderSide: this.defenderSide,
@@ -89,16 +91,23 @@ var Side = (function () {
         this.isSR = !!side.isSR;
         this.isReflect = !!side.isReflect;
         this.isLightScreen = !!side.isLightScreen;
+        this.isSolidRock = !!side.isSolidRock;
+        this.isMagnetRise = !!side.isMagnetRise;
         this.isProtected = !!side.isProtected;
         this.isSeeded = !!side.isSeeded;
+        this.isSaltCured = !!side.isSaltCured;
         this.isForesight = !!side.isForesight;
         this.isTailwind = !!side.isTailwind;
+        this.isSwamp = !!side.isSwamp;
+        this.isTrickRoom = !!side.isTrickRoom;
         this.isHelpingHand = !!side.isHelpingHand;
         this.isFlowerGift = !!side.isFlowerGift;
+        this.isPowerTrick = !!side.isPowerTrick;
         this.isFriendGuard = !!side.isFriendGuard;
         this.isAuroraVeil = !!side.isAuroraVeil;
         this.isBattery = !!side.isBattery;
         this.isPowerSpot = !!side.isPowerSpot;
+        this.isSteelySpirit = !!side.isSteelySpirit;
         this.isSwitching = side.isSwitching;
     }
     Side.prototype.clone = function () {

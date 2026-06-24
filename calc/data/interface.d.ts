@@ -4,7 +4,7 @@ export interface As<T> {
 export type ID = (string & As<'ID'>) | (string & {
     __isID: true;
 }) | '';
-export type GenerationNum = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type GenerationNum = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type GenderName = 'M' | 'F' | 'N';
 export type StatID = 'hp' | StatIDExceptHP;
 export type StatIDExceptHP = 'atk' | 'def' | 'spa' | 'spd' | 'spe';
@@ -20,7 +20,7 @@ export type GameType = 'Singles' | 'Doubles';
 export type Terrain = 'Electric' | 'Grassy' | 'Psychic' | 'Misty';
 export type Weather = 'Sand' | 'Sun' | 'Rain' | 'Hail' | 'Snow' | 'Harsh Sunshine' | 'Heavy Rain' | 'Strong Winds';
 export type NatureName = 'Adamant' | 'Bashful' | 'Bold' | 'Brave' | 'Calm' | 'Careful' | 'Docile' | 'Gentle' | 'Hardy' | 'Hasty' | 'Impish' | 'Jolly' | 'Lax' | 'Lonely' | 'Mild' | 'Modest' | 'Naive' | 'Naughty' | 'Quiet' | 'Quirky' | 'Rash' | 'Relaxed' | 'Sassy' | 'Serious' | 'Timid';
-export type TypeName = 'Normal' | 'Fighting' | 'Flying' | 'Poison' | 'Ground' | 'Rock' | 'Bug' | 'Ghost' | 'Steel' | 'Fire' | 'Water' | 'Grass' | 'Electric' | 'Psychic' | 'Ice' | 'Dragon' | 'Dark' | 'Fairy' | '???';
+export type TypeName = 'Normal' | 'Fighting' | 'Flying' | 'Poison' | 'Ground' | 'Rock' | 'Bug' | 'Ghost' | 'Steel' | 'Fire' | 'Water' | 'Grass' | 'Electric' | 'Psychic' | 'Ice' | 'Dragon' | 'Dark' | 'Fairy' | 'Stellar' | '???';
 export type MoveCategory = 'Physical' | 'Special' | 'Status';
 export type MoveTarget = 'adjacentAlly' | 'adjacentAllyOrSelf' | 'adjacentFoe' | 'all' | 'allAdjacent' | 'allAdjacentFoes' | 'allies' | 'allySide' | 'allyTeam' | 'any' | 'foeSide' | 'normal' | 'randomNormal' | 'scripted' | 'self';
 export interface Generations {
@@ -54,7 +54,9 @@ export interface Items {
 }
 export interface Item extends Data<ItemName> {
     readonly kind: 'Item';
-    readonly megaEvolves?: SpeciesName;
+    readonly megaStone?: Readonly<{
+        [megaEvolves: SpeciesName]: SpeciesName;
+    }>;
     readonly isBerry?: boolean;
     readonly naturalGift?: Readonly<{
         basePower: number;
@@ -74,6 +76,8 @@ export interface MoveFlags {
     pulse?: 1 | 0;
     slicing?: 1 | 0;
     wind?: 1 | 0;
+    kick?: 1 | 0;
+    bone?: 1 | 0;
 }
 export interface SelfOrSecondaryEffect {
     boosts?: Partial<StatsTable>;
@@ -109,6 +113,7 @@ export interface Move extends Data<MoveName> {
         basePower: number;
     };
     readonly multihit?: number | number[];
+    readonly multiaccuracy?: boolean;
 }
 export interface Species {
     get(id: ID): Specie | undefined;
@@ -119,13 +124,13 @@ export interface Specie extends Data<SpeciesName> {
     readonly types: [TypeName] | [TypeName, TypeName];
     readonly baseStats: Readonly<StatsTable>;
     readonly weightkg: number;
-    readonly nfe?: boolean;
     readonly gender?: GenderName;
-    readonly otherFormes?: SpeciesName[];
-    readonly baseSpecies?: SpeciesName;
+    readonly nfe?: boolean;
     readonly abilities?: {
         0: AbilityName | '';
     };
+    readonly otherFormes?: SpeciesName[];
+    readonly baseSpecies?: SpeciesName;
 }
 export interface Types {
     get(id: ID): Type | undefined;

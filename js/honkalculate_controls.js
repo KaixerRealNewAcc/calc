@@ -97,8 +97,8 @@ function performCalculations() {
 				for (var n = 0; n < 4; n++) {
 					result = damageResults[n];
 					minMaxDamage = result.range();
-					minDamage = minMaxDamage[0] * attacker.moves[n].hits;
-					maxDamage = minMaxDamage[1] * attacker.moves[n].hits;
+					minDamage = minMaxDamage[0];
+					maxDamage = minMaxDamage[1];
 					minPercentage = Math.floor(minDamage * 1000 / defender.maxHP()) / 10;
 					maxPercentage = Math.floor(maxDamage * 1000 / defender.maxHP()) / 10;
 					minPixels = Math.floor(minDamage * 48 / defender.maxHP());
@@ -242,16 +242,26 @@ $(".mode").change(function () {
 		var params = new URLSearchParams(window.location.search);
 		params.delete('mode');
 		params = '' + params;
-		window.location.replace('index' + linkExtension + (params.length ? '?' + params : ''));
+		window.location.replace('index.html' + (params.length ? '?' + params : ''));
+	} else if ($("#champions").prop("checked")) {
+		var params = new URLSearchParams(window.location.search);
+		params.delete('mode');
+		params = '' + params;
+		window.location.replace('champions.html' + (params.length ? '?' + params : ''));
 	} else if ($("#randoms").prop("checked")) {
 		var params = new URLSearchParams(window.location.search);
 		params.delete('mode');
 		params = '' + params;
-		window.location.replace('randoms' + linkExtension + (params.length ? '?' + params : ''));
+		window.location.replace('randoms.html' + (params.length ? '?' + params : ''));
+	} else if ($("#oms").prop("checked")) {
+		var params = new URLSearchParams(window.location.search);
+		params.delete('mode');
+		params = '' + params;
+		window.location.replace('oms.html' + (params.length ? '?' + params : ''));
 	} else {
 		var params = new URLSearchParams(window.location.search);
 		params.set('mode', $(this).attr("id"));
-		window.location.replace('honkalculate' + linkExtension + '?' + params);
+		window.location.replace('honkalculate.html?' + params);
 	}
 });
 
@@ -314,9 +324,9 @@ $(document).ready(function () {
 	window.mode = params.get("mode");
 	if (window.mode) {
 		if (window.mode === "randoms") {
-			window.location.replace("randoms" + linkExtension + "?" + params);
+			window.location.replace('randoms.html?' + params);
 		} else if (window.mode !== "one-vs-all" && window.mode !== "all-vs-one") {
-			window.location.replace("index" + linkExtension + "?" + params);
+			window.location.replace('index.html?' + params);
 		}
 	} else {
 		window.mode = "one-vs-all";
@@ -337,10 +347,10 @@ function calcDTDimensions() {
 	});
 
 	var theadBottomOffset = getBottomOffset($(".sorting"));
-	var heightUnderDT = getBottomOffset($(".holder-0")) - getBottomOffset($("#holder-2 tbody"));
+	var heightUnderDT = getBottomOffset($("#holder-0")) - getBottomOffset($("#holder-2 tbody"));
 	dtHeight = $(document).height() - theadBottomOffset - heightUnderDT;
 	dtWidth = $(window).width() - $("#holder-2").offset().left;
-	dtWidth -= 2 * parseFloat($(".holder-0").css("padding-right"));
+	dtWidth -= 2 * parseFloat($("#holder-0").css("padding-right"));
 }
 
 function getBottomOffset(obj) {

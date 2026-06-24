@@ -22,6 +22,29 @@ for (var i = 0; i < 4; i++) {
 	});
 }
 
+/** Same markup as emi.dev ck+ display.js (speed-indicator + speed-faster | speed-tied | speed-slower). */
+function updateSpeedTierIcons(p1spe, p2spe) {
+	var p1kind = p1spe > p2spe ? "F" : p1spe < p2spe ? "S" : "T";
+	var p2kind = p2spe > p1spe ? "F" : p2spe < p1spe ? "S" : "T";
+	var labels = { F: "Faster than opponent", T: "Speed tie", S: "Slower than opponent" };
+	function apply($panel, kind) {
+		var $m = $panel.find(".sp .speed-indicator");
+		if (!$m.length) return;
+		if (kind === "F") {
+			$m.html('<div class="speed-faster">&laquo;</div>');
+		} else if (kind === "S") {
+			$m.html('<div class="speed-slower">&laquo;</div>');
+		} else {
+			$m.html('<div class="speed-tied">-</div>');
+		}
+		$m.attr("title", labels[kind]);
+		$m.attr("aria-label", labels[kind]);
+		$m.removeAttr("hidden");
+	}
+	apply($("#p1"), p1kind);
+	apply($("#p2"), p2kind);
+}
+
 var damageResults;
 function performCalculations() {
 	var p1info = $("#p1");
@@ -32,6 +55,7 @@ function performCalculations() {
 	var p2field = p1field.clone().swap();
 
 	damageResults = calculateAllMoves(gen, p1, p1field, p2, p2field);
+
 	p1 = damageResults[0][0].attacker;
 	p2 = damageResults[1][0].attacker;
 	var battling = [p1, p2];
@@ -39,6 +63,7 @@ function performCalculations() {
 	p2.maxDamages = [];
 	p1info.find(".sp .totalMod").text(p1.stats.spe);
 	p2info.find(".sp .totalMod").text(p2.stats.spe);
+	updateSpeedTierIcons(p1.stats.spe, p2.stats.spe);
 	var fastestSide = p1.stats.spe > p2.stats.spe ? 0 : p1.stats.spe === p2.stats.spe ? "tie" : 1;
 
 	var result, maxDamage;
@@ -248,12 +273,12 @@ $(".mode").change(function () {
 	var params = new URLSearchParams(window.location.search);
 	params.set('mode', $(this).attr("id"));
 	var mode = params.get('mode');
-	if (mode === 'randoms') {
-		window.location.replace('randoms' + linkExtension + '?' + params);
-	} else if (mode === 'one-vs-one') {
-		window.location.replace('index' + linkExtension + '?' + params);
-	} else {
-		window.location.replace('honkalculate' + linkExtension + '?' + params);
+	if(mode === 'hardcore'){
+		window.location.replace('hardcore' + linkExtension + '?' + params);
+	} else if(mode === 'normal'){
+		window.location.replace('normal' + linkExtension + '?' + params);
+	} else if (mode === 'brilliantblue') {
+		window.location.replace('brilliantblue' + linkExtension + '?' + params);
 	}
 });
 
@@ -263,22 +288,58 @@ $(".notation").change(function () {
 
 $(document).ready(function () {
 	var params = new URLSearchParams(window.location.search);
+	var importParam = params.get('import');
+	if (importParam) {
+		try {
+			var decodedImport = atob(importParam); // Decode base64
+			$('.import-team-text').val(decodedImport); // Set value to text area
+		} catch (e) {
+			console.error('Failed to decode Import parameter:', e);
+		}
+	}
+	
 	var m = params.get('mode');
 	if (m) {
-		if (m !== 'one-vs-one' && m !== 'randoms') {
-			window.location.replace('honkalculate' + linkExtension + '?' + params);
-		} else {
-			if ($('#randoms').prop('checked')) {
-				if (m === 'one-vs-one') {
-					window.location.replace('index' + linkExtension + '?' + params);
+			if ($('normal').prop('checked')) {
+				if(m === 'hardcore') {
+					window.location.replace('hardcore' + linkExtension + '?' + params);
 				}
-			} else {
-				if (m === 'randoms') {
-					window.location.replace('randoms' + linkExtension + '?' + params);
+			} else if ($('hardcore').prop('checked')) {
+				if(m === 'normal') {
+					window.location.replace('normal' + linkExtension + '?' + params);
+				}
+			} else if ($('brilliantblue').prop('checked')) {
+				if(m === 'brilliantblue') {
+					window.location.replace('brilliantblue' + linkExtension + '?' + params);
 				}
 			}
 		}
+
+	function setBoxPosition(onTop) {
+		var elements = [$('#trainer-mons').parent(), $('#opp-trainer-mons').parent(), $('#trainer-mons-hc').parent(), $('#opp-trainer-mons-hc').parent()];
+
+		for (var i = 0; i < elements.length; i++) {
+			var $e = elements[i];
+			if (onTop) {
+				$e.prev().insertAfter($e); // move up
+			} else {
+				$e.next().insertBefore($e); // move down
+			}
+		}
 	}
+	
+	$("#teamsOnTop").change(function() {
+		var onTop = $(this).is(":checked");
+		
+		setBoxPosition(onTop);
+	});
+
+	if ($("#teamsOnTop").is(":checked")) {
+		$("#teamsOnTop").change();
+	}
+
+	setBoxPosition($("#teamsOnTop").is(":checked"));
+
 	$(".calc-trigger").bind("change keyup", function (ev) {
 		/*
 			This prevents like 8 performCalculations out of 8 that were useless
@@ -301,6 +362,6 @@ $("#mainResult").click(function () {
 		document.getElementById('tooltipText').style.visibility = 'visible';
 		setTimeout(function () {
 			document.getElementById('tooltipText').style.visibility = 'hidden';
-		}, 2000);
+		}, 1500);
 	});
 });

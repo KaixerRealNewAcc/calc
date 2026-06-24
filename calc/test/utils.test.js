@@ -15,5 +15,8 @@ describe('util', function () {
             f: 4
         });
     });
+    test('toID converts Flabébé to flabebe', function () {
+        expect((0, util_1.toID)('Flabébé')).toBe('flabebe');
+    });
 });
 //# sourceMappingURL=utils.test.js.map

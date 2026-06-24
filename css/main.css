@@ -1,4 +1,15 @@
 /* header */
+:root {
+    --box-icon-size: 64px;
+    /* Full-size sprite tile (big icon mode); panel preview always uses this, not --box-icon-size when small */
+    --big-icon-size: 64px;
+    /* Row height for one team/box icon (for min-heights); equals height for square modes */
+    --box-icon-row: 30px;
+    /* emi.dev ck+ calc — speed column (script/display.js, style.css) */
+    --speed-faster: #3cd9f5;
+    --speed-tied: #ecdf68;
+    --speed-slower: #d47070;
+}
 a img {
     border: 0;
 }
@@ -11,7 +22,7 @@ a img {
     background: linear-gradient(top,  #E8EEFC,  #D7DEEA);
     filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#E8EEFC', endColorstr='#D7DEEA');
 
-    border-bottom: 1px solid #AAA;
+    border-bottom: 2px solid #660000;
     box-shadow: inset 1px 1px 0 rgba(255, 255, 255, .6), 0px 2px 2px rgba(0, 0, 0, .15);
 }
 .header-color {
@@ -162,14 +173,194 @@ html, body {
 }
 
 .trainer-pok:hover {
-    outline: 2px solid;
-    outline-color: #1abc9c;
+    outline: 3px solid;
+    outline-color: #bc321a69;
 }
 
 .wrapper {
     padding: 0 1em;
-    max-width: 1285px;
-    margin: 0 auto;
+    max-width: 1250px;
+    margin: 30px auto 0 auto;
+}
+.app-header-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.65em;
+    row-gap: 0.45em;
+    padding-top: 0.55em;
+    padding-bottom: 0.35em;
+}
+.app-menu-dropdown {
+    position: relative;
+    z-index: 200;
+    flex-shrink: 0;
+}
+.app-menu-cog {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    background-color: #F1F4F9;
+    color: inherit;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+.app-menu-cog:hover {
+    filter: brightness(1.06);
+}
+.app-menu-cog[aria-expanded="true"] {
+    box-shadow: inset 0 0 0 2px #2563eb;
+}
+.app-menu-panel {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 4px);
+    min-width: 280px;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    color: #f3f4f6;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+.app-menu-panel[hidden] {
+    display: none !important;
+}
+.app-menu-item {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    font: inherit;
+    font-size: 0.95em;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+}
+.app-menu-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+.app-menu-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    margin: 0;
+    font: inherit;
+    font-size: 0.95em;
+    font-weight: normal;
+    color: inherit;
+    text-align: left;
+}
+.app-menu-row + .app-menu-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.app-menu-row--theme {
+    flex-wrap: wrap;
+}
+.app-menu-row-label {
+    flex: 0 0 auto;
+    line-height: 1.25;
+}
+.app-menu-mega-availability-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.app-menu-row--sub {
+    padding-left: 18px;
+    border-left: 3px solid rgba(255, 255, 255, 0.14);
+    margin-left: 4px;
+}
+.app-menu-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 12px;
+    margin: 0;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.95em;
+    font-weight: normal;
+    color: inherit;
+    text-align: left;
+}
+.app-menu-toggle-row:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+.app-menu-toggle-label {
+    flex: 1;
+    min-width: 0;
+    line-height: 1.25;
+}
+.app-menu-toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 36px;
+    height: 20px;
+}
+.app-menu-toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 36px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+.app-menu-toggle-input:focus {
+    outline: none;
+}
+.app-menu-toggle-input:focus-visible + .app-menu-toggle-track {
+    box-shadow: 0 0 0 2px #2563eb;
+}
+.app-menu-toggle-track {
+    display: block;
+    width: 36px;
+    height: 20px;
+    border-radius: 999px;
+    background: #c4c4ce;
+    transition: background 0.2s ease;
+    position: relative;
+    pointer-events: none;
+}
+.app-menu-toggle-track::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    top: 3px;
+    left: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+.app-menu-toggle-input:checked + .app-menu-toggle-track {
+    background: #2563eb;
+}
+.app-menu-toggle-input:checked + .app-menu-toggle-track::after {
+    transform: translateX(16px);
+}
+.app-top-offset {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 4px;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 .credits {
     clear: both;
@@ -183,7 +374,7 @@ div.wrapper > div > span {
 fieldset {
     float: left;
     background-color: #F1F4F9;
-    border: 1px solid #AAAAAA;
+    border: 1px solid #310000e1;
 }
 legend {
     font-weight: bold;
@@ -231,7 +422,12 @@ th {
     display: inline-block; /* required for honkaculate to work */
 }
 .poke-info {
+    box-sizing: content-box;
     width: 30em;
+    max-width: 30em;
+    min-width: 0;
+    overflow-x: clip;
+    border: 2px solid #310000e1 !important;
 }
 .field-info, .poke-import {
     text-align: center;
@@ -243,6 +439,88 @@ th {
 }
 #holder-2 tr {
     white-space: nowrap;
+}
+
+/*
+
+    F = Faster 
+    T = Speed tie
+    S = slower
+*/
+.mon-speed-F{
+    outline: 2px solid #5fff37;
+    outline-offset: -2px;
+    border-radius: 6px;
+}
+.mon-speed-T{
+    outline: 2px solid #ecdf68;
+    outline-offset: -2px;
+    border-radius: 6px;
+}
+.mon-speed-S{
+    outline: 2px solid #d47070;
+    outline-offset: -2px;
+    border-radius: 6px;
+}
+.mon-speed-none{
+    outline: none !important;
+}
+/* Speed: same Total column width as other stats — do not pad td (padding widens the column for every row). */
+.sp-total-with-speed-cell {
+    overflow: visible;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.sp-total-and-speed {
+    position: relative;
+    display: inline-block;
+    width: auto;
+    vertical-align: baseline;
+}
+.sp-total-and-speed .total {
+    font-variant-numeric: tabular-nums;
+}
+.sp-total-and-speed .speed-indicator {
+    position: absolute;
+    left: 100%;
+    right: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 2.9em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Ubuntu Mono", ui-monospace, monospace;
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 1;
+    width: max-content;
+    min-width: 0;
+}
+/* Square cell so « + rotate() shares the same optical center as "-" (faster was skewing left) */
+.sp-total-and-speed .speed-indicator > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    box-sizing: border-box;
+    transform-origin: center center;
+}
+.sp-total-and-speed .speed-faster {
+    transform: translateX(8px) rotate(90deg);
+    color: var(--speed-faster);
+}
+.sp-total-and-speed .speed-tied {
+    transform: translateX(8px) translateY(-2px);
+    color: var(--speed-tied);
+}
+.sp-total-and-speed .speed-slower {
+    transform: translateX(2.5px) rotate(-90deg);
+    color: var(--speed-slower);
 }
 
 /* general button styling */
@@ -385,6 +663,10 @@ th {
 .info-group {
     margin: 1em 0;
 }
+#trashFieldset {
+    margin-top: 5px;
+    width: 400px;
+}
 .set-selector {
     width: 100%;
 }
@@ -413,7 +695,7 @@ select.toxic-counter {
     width: 4.5em;
 }
 .poke-info .crit-btn {
-    font-size: 0.8em;
+    font-size: 0.5em;
     width: 2.5em;
     height: 1em;
     padding: 3px 3px;
@@ -470,8 +752,32 @@ table.field {
   clear: right;
 }
 
+.battle-notes-box[hidden] {
+    display: none !important;
+}
+
+/* Match Battle Notes + Import/Export field chrome (subtle border, full width of 27.5em box) */
+.battle-notes-box .battle-notes-textarea{
+    display: block;
+    width: 100%;
+    min-width: 25em;
+    min-height: 10em;
+    box-sizing: border-box;
+    font: inherit;
+    color: inherit;
+    border: 1px solid #222222;
+    border-radius: 6px;
+    padding: 8px;
+    resize: vertical;
+    text-align: left;
+}
+.battle-notes-box .battle-notes-textarea {
+    margin: 0.35em auto 0;
+    min-height: 120px;
+}
+
 .import-team-text {
-    min-width: 27em;
+    min-width: 26em;
     min-height: 10em;
     resize: vertical;
 }
@@ -553,7 +859,7 @@ table.field {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     border: solid;
-    border-color: #1c1414;;
+    border-color: #1c1414;
     border-radius: 20%;
 }
 .mon-speed-none{
@@ -651,8 +957,8 @@ table.field {
     float: none;
 }
 
-#p2mon, #p1mon, #monSingle, #monDouble {
-    min-height: 30px;
+#p2mon, #p1mon, #monSingle, #monSprite, #monDouble {
+    min-height: 32px;
 }
 
 .info-paragraph > b{
@@ -662,3 +968,68 @@ table.field {
     background: var(--fieldset-color);
     color: unset;
 }
+
+.small-crit-btn {
+    font-size: 0.8em;
+    width: 2.5em;
+    height: 1em;
+    padding: 3px 3px;
+    margin: 0px 1px;
+}
+
+.small-crit-btn[id*="TopL"] {
+    margin-left: 0.8em;
+}
+
+/* settings */
+
+.settings {
+    float: right;
+}
+
+#popup-container {
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(96, 96, 96, 0.4);
+    position: fixed;
+    z-index: 1;
+
+    fieldset {
+        margin: 10% auto 0;
+        float: none;
+    }
+    .edit-encounter-popup {
+        width: 350px;
+
+        label {
+            width: 7em;
+            display: inline-block;
+        }
+        .edit-species-selector {
+            width: 100%;
+        }
+        .edit-nickname {
+            margin-top: 6px;
+        }
+        .edit-nature-selector, .edit-ability-selector, .edit-item-selector, .edit-location-selector {
+            width: 12em;
+        }
+        .edit-move-selector {
+            width: 49%;
+            margin-bottom: 2px;
+            margin-top: 2px;
+            font-size: 0.9em;
+        }
+        .buttons {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+
+            #cancel-edit {
+                margin-right: 20px;
+            }
+        }
+    }
+}
+

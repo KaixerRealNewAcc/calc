@@ -1,5 +1,5 @@
-import * as I from '../data/interface';
-import * as D from '@pkmn/dex';
+import type * as I from '../data/interface';
+import type * as D from '@pkmn/dex';
 export declare function toID(s: string): I.ID;
 export declare class Generations implements I.Generations {
     private readonly dex;
@@ -39,7 +39,9 @@ declare class Item implements I.Item {
     readonly kind: 'Item';
     readonly id: I.ID;
     readonly name: I.ItemName;
-    readonly megaEvolves?: I.SpeciesName;
+    readonly megaStone?: Readonly<{
+        [megaEvolves: I.SpeciesName]: I.SpeciesName;
+    }>;
     readonly isBerry?: boolean;
     readonly naturalGift?: Readonly<{
         basePower: number;
@@ -86,6 +88,7 @@ declare class Move implements I.Move {
         basePower: number;
     };
     readonly multihit?: number | number[];
+    readonly multiaccuracy?: boolean;
     constructor(move: D.Move, dex: D.ModdedDex);
 }
 declare class Species implements I.Species {
@@ -101,13 +104,13 @@ declare class Specie implements I.Specie {
     readonly types: [I.TypeName] | [I.TypeName, I.TypeName];
     readonly baseStats: Readonly<I.StatsTable>;
     readonly weightkg: number;
-    readonly nfe?: boolean;
     readonly gender?: I.GenderName;
-    readonly otherFormes?: I.SpeciesName[];
-    readonly baseSpecies?: I.SpeciesName;
+    readonly nfe?: boolean;
     readonly abilities?: {
         0: I.AbilityName;
     };
+    readonly otherFormes?: I.SpeciesName[];
+    readonly baseSpecies?: I.SpeciesName;
     constructor(species: D.Species, dex: D.ModdedDex);
 }
 export declare class Types implements I.Types {

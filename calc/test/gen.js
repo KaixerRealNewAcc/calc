@@ -192,7 +192,7 @@ var Item = (function () {
         this.kind = 'Item';
         this.id = item.id;
         this.name = item.name;
-        this.megaEvolves = item.megaEvolves;
+        this.megaStone = item.megaStone;
         this.isBerry = item.isBerry;
         this.naturalGift = item.naturalGift && {
             basePower: item.naturalGift.basePower - (gen === 2 ? 20 : 0),
@@ -271,6 +271,8 @@ var Move = (function () {
         }
         if (move.multihit)
             this.multihit = move.multihit;
+        if (move.multiaccuracy)
+            this.multiaccuracy = move.multiaccuracy;
         if (move.drain)
             this.drain = move.drain;
         if (move.willCrit)
@@ -399,11 +401,13 @@ var Specie = (function () {
         this.types = species.types;
         this.baseStats = species.baseStats;
         this.weightkg = species.weightkg;
+        if (species.gender && dex.gen > 1)
+            this.gender = species.gender;
         var nfe = !!((_a = species.evos) === null || _a === void 0 ? void 0 : _a.some(function (s) { return exists(dex.species.get(s), dex.gen); }));
         if (nfe)
             this.nfe = nfe;
-        if (species.gender === 'N' && dex.gen > 1)
-            this.gender = species.gender;
+        if (dex.gen > 2)
+            this.abilities = { 0: species.abilities[0] };
         var formes = (_b = species.otherFormes) === null || _b === void 0 ? void 0 : _b.filter(function (s) { return exists(dex.species.get(s), dex.gen); });
         if (species.id.startsWith('aegislash')) {
             if (species.id === 'aegislashblade') {
@@ -442,8 +446,6 @@ var Specie = (function () {
             if (exists(gmax, dex.gen))
                 this.otherFormes = __spreadArray(__spreadArray([], __read(formes_1), false), [gmax.name], false).sort();
         }
-        if (dex.gen > 2)
-            this.abilities = { 0: species.abilities[0] };
     }
     return Specie;
 }());
@@ -606,6 +608,8 @@ var NATDEX_BANNED = [
 function exists(val, gen) {
     if (!val.exists || val.id === 'noability')
         return false;
+    if (val.kind === 'Species' && val.isCosmeticForme)
+        return false;
     if (gen === 7 && val.isNonstandard === 'LGPE')
         return true;
     if (gen >= 8) {
@@ -622,6 +626,10 @@ function exists(val, gen) {
         if (gen > 8 && 'isZ' in val && val.isZ)
             return false;
         if (gen > 8 && val.isNonstandard === 'Unobtainable')
+            return true;
+        if (gen > 8 && val.isNonstandard === 'Future')
+            return true;
+        if (gen > 8 && ['ramnarokradiant'].includes(val.id))
             return true;
     }
     if (gen >= 6 && ['floetteeternal'].includes(val.id))
